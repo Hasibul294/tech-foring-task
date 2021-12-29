@@ -11,6 +11,16 @@ import AccountCircle from "@mui/icons-material/AccountCircle";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import MoreIcon from "@mui/icons-material/MoreVert";
 import Avatar from "@mui/material/Avatar";
+import Drawer from "@mui/material/Drawer";
+import List from "@mui/material/List";
+import Divider from "@mui/material/Divider";
+import ListItem from "@mui/material/ListItem";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import ListItemText from "@mui/material/ListItemText";
+import InboxIcon from "@mui/icons-material/MoveToInbox";
+import MailIcon from "@mui/icons-material/Mail";
+
+const drawerWidth = 150;
 
 export default function Navigation() {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -117,8 +127,12 @@ export default function Navigation() {
   );
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static" style={{ backgroundColor: "#192a45" }}>
+    <Box sx={{ display: "flex" }}>
+      <AppBar
+        position="fixed"
+        style={{ backgroundColor: "#192a45" }}
+        sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
+      >
         <Toolbar>
           <Box
             style={{
@@ -187,6 +201,42 @@ export default function Navigation() {
       </AppBar>
       {renderMobileMenu}
       {renderMenu}
+      <Drawer
+        variant="permanent"
+        sx={{
+          width: drawerWidth,
+          flexShrink: 0,
+          [`& .MuiDrawer-paper`]: {
+            width: drawerWidth,
+            boxSizing: "border-box",
+          },
+        }}
+      >
+        <Toolbar />
+        <Box sx={{ overflow: "auto" }}>
+          <List>
+            {["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
+              <ListItem button key={text}>
+                <ListItemIcon>
+                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                </ListItemIcon>
+                <ListItemText primary={text} />
+              </ListItem>
+            ))}
+          </List>
+          <Divider />
+          <List>
+            {["All mail", "Trash", "Spam"].map((text, index) => (
+              <ListItem button key={text}>
+                <ListItemIcon>
+                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                </ListItemIcon>
+                <ListItemText primary={text} />
+              </ListItem>
+            ))}
+          </List>
+        </Box>
+      </Drawer>
     </Box>
   );
 }
