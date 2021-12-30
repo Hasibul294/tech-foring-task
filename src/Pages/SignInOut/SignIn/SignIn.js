@@ -3,61 +3,65 @@ import {
   Box,
   Button,
   CircularProgress,
+  Container,
+  InputAdornment,
+  Link,
   TextField,
   Typography,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { NavLink, useNavigate, useLocation } from "react-router-dom";
+import EmailIcon from "@mui/icons-material/Email";
+import LockIcon from "@mui/icons-material/Lock";
 
-const SignIn = () => {
+const SignIn = ({ handleChange }) => {
   const [loginData, setLoginData] = useState({});
+  const [error, setError] = useState("");
   const location = useLocation();
   const navigate = useNavigate();
 
   const handleOnBlur = (e) => {
     const field = e.target.name;
     const value = e.target.value;
-    console.log(field, value);
     const newLoginData = { ...loginData };
     newLoginData[field] = value;
     setLoginData(newLoginData);
   };
 
-  // useEffect(() => {
-  //   fetch("https://tf-practical.herokuapp.com/api/login/")
-  //     .then((res) => res.json)
-  //     .then((data) => console.log(data));
-  // }, []);
-
-  // const handleLogin = (e) => {
-  //   e.preventDefault();
-  // };
-
-  async function handleLogin(e) {
+  const handleSignin = (e) => {
     e.preventDefault();
-    console.log(loginData);
-    let result = await fetch("https://tf-practical.herokuapp.com/api/login/", {
+    fetch("https://tf-practical.herokuapp.com/api/login/", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(loginData),
-    });
-    result = await result.json();
-    localStorage.setItem("user-info", JSON.stringify(result));
-    navigate("/home");
-  }
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.user) {
+          localStorage.setItem("user-info", JSON.stringify(data));
+          navigate("/dashboard");
+          setError("");
+        } else {
+          setError(data.detail);
+        }
+      })
+      .catch((error) => setError(error));
+  };
 
   return (
     <Box
       sx={{
         boxShadow: 3,
-        height: "70vh",
+        height: "80vh",
         display: "flex",
+        flexDirection: "column",
         alignItems: "center",
+        justifyContent: "center",
       }}
     >
-      <Box style={{ paddingTop: "5px" }}>
+      <Box>
         <Typography variant="h5" gutterBottom>
           SIGN IN
         </Typography>
@@ -65,40 +69,68 @@ const SignIn = () => {
           style={{ marginBottom: "30px" }}
           variant="subtitle2"
           gutterBottom
-          component="div"
         >
           Lorem ipsum dolor sit amet.
         </Typography>
-        <form onSubmit={handleLogin}>
+        <form onSubmit={handleSignin}>
           <TextField
-            sx={{ width: "75%", mb: 2 }}
+            sx={{ width: "80%", mb: 2 }}
             id="standard-basic"
             name="email"
-            onChange={handleOnBlur}
+            type="email"
             label="Your Email"
+            required
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <EmailIcon color="success" />
+                </InputAdornment>
+              ),
+            }}
             variant="outlined"
+            onChange={handleOnBlur}
           />
           <TextField
-            sx={{ width: "75%", mb: 5 }}
+            sx={{ width: "80%", mb: 2 }}
             id="standard-basic"
             name="password"
-            onChange={handleOnBlur}
-            label="Your Password"
-            variant="outlined"
             type="password"
+            label="Your Password"
+            required
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <LockIcon color="success" />
+                </InputAdornment>
+              ),
+            }}
+            variant="outlined"
+            onChange={handleOnBlur}
           />
+          {error && (
+            <Alert
+              sx={{ width: "70%", margin: "0 auto" }}
+              severity="error"
+              variant="filled"
+            >
+              {error}
+            </Alert>
+          )}
           <Button
-            sx={{ width: "50%", mb: 1 }}
+            sx={{ width: "50%", mb: 1, mt: 3 }}
             variant="contained"
             type="submit"
           >
             SIGN IN
           </Button>
-          <NavLink style={{ textDecoration: "none" }} to="/register">
+          <Link
+            style={{ textDecoration: "none" }}
+            onClick={() => handleChange("event", 1)}
+          >
             <Button variant="text">
-              Don't have an account?Please register
+              Don't have an account? Please Sign Up
             </Button>
-          </NavLink>
+          </Link>
         </form>
       </Box>
     </Box>

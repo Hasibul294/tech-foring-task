@@ -20,18 +20,24 @@ import ListItemText from "@mui/material/ListItemText";
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 import WorkIcon from "@mui/icons-material/Work";
 import MailIcon from "@mui/icons-material/Mail";
-import { NavLink, Outlet } from "react-router-dom";
-import { Button } from "@mui/material";
-import Jobs from "../../Home/Jobs/Jobs";
+import { NavLink, Outlet, useNavigate } from "react-router-dom";
 
 const drawerWidth = 150;
 
-export default function Navigation() {
+export default function Dashboard() {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
+  const getLocal = localStorage.getItem("user-info");
+  const profileName = JSON.parse(getLocal).user.full_name;
+  const navigate = useNavigate();
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+
+  const handleLogout = () => {
+    localStorage.removeItem("user-info");
+    navigate("/signIn");
+  };
 
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -67,8 +73,8 @@ export default function Navigation() {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+      <MenuItem onClick={handleMenuClose}>{profileName}</MenuItem>
+      <MenuItem onClick={handleLogout}>Log Out</MenuItem>
     </Menu>
   );
 
@@ -219,74 +225,60 @@ export default function Navigation() {
         <Toolbar />
         <Box sx={{ overflow: "auto" }}>
           <List>
-            <ListItem style={{ marginTop: "10px" }} button key="Home">
-              <ListItemIcon>
-                <HomeRoundedIcon
-                  color="success"
-                  style={{
-                    border: "2px solid #192a45",
-                    padding: "5px",
-                    borderRadius: "50px",
-                  }}
-                />
-              </ListItemIcon>
-              <ListItemText primary="Home" />
-            </ListItem>
-            <Divider />
-            <ListItem button key="Job">
-              <ListItemIcon>
-                <WorkIcon
-                  color="success"
-                  style={{
-                    border: "2px solid #192a45",
-                    padding: "5px",
-                    borderRadius: "50px",
-                  }}
-                />
-              </ListItemIcon>
-              <ListItemText primary="Job" />
-            </ListItem>
-            <Divider />
-            <ListItem button key="Mail">
-              <ListItemIcon>
-                <MailIcon
-                  color="success"
-                  style={{
-                    border: "2px solid #192a45",
-                    padding: "5px",
-                    borderRadius: "50px",
-                  }}
-                />
-              </ListItemIcon>
-              <ListItemText primary="Mail" />
-            </ListItem>
-            <Divider />
-            <NavLink style={{ textDecoration: "none" }} to="/home/job">
-              <Button sx={{ mt: 2 }} color="inherit">
-                Appointment
-              </Button>
+            <NavLink style={{ textDecoration: "none" }} to="/dashboard/home">
+              <ListItem style={{ marginTop: "10px" }} button key="Home">
+                <ListItemIcon>
+                  <HomeRoundedIcon
+                    color="success"
+                    style={{
+                      border: "2px solid #192a45",
+                      padding: "5px",
+                      borderRadius: "50px",
+                    }}
+                  />
+                </ListItemIcon>
+                <ListItemText primary="Home" />
+              </ListItem>
             </NavLink>
+            <Divider />
+            <NavLink style={{ textDecoration: "none" }} to="/dashboard/jobs">
+              <ListItem button key="Job">
+                <ListItemIcon>
+                  <WorkIcon
+                    color="success"
+                    style={{
+                      border: "2px solid #192a45",
+                      padding: "5px",
+                      borderRadius: "50px",
+                    }}
+                  />
+                </ListItemIcon>
+                <ListItemText primary="Job" />
+              </ListItem>
+            </NavLink>
+            <Divider />
+            <NavLink style={{ textDecoration: "none" }} to="/dashboard/mails">
+              <ListItem button key="Mail">
+                <ListItemIcon>
+                  <MailIcon
+                    color="success"
+                    style={{
+                      border: "2px solid #192a45",
+                      padding: "5px",
+                      borderRadius: "50px",
+                    }}
+                  />
+                </ListItemIcon>
+                <ListItemText primary="Mail" />
+              </ListItem>
+            </NavLink>
+
+            <Divider />
           </List>
         </Box>
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <Toolbar />
-        <Jobs></Jobs>
-        {/* <Typography paragraph>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua. Rhoncus
-          dolor purus non enim praesent elementum facilisis leo vel. Risus at
-          ultrices mi tempus imperdiet. Semper risus in hendrerit gravida rutrum
-          quisque non tellus. Convallis convallis tellus id interdum velit
-          laoreet id donec ultrices. Odio morbi quis commodo odio aenean sed
-          adipiscing. Amet nisl suscipit adipiscing bibendum est ultricies
-          integer quis. Cursus euismod quis viverra nibh cras. Metus vulputate
-          eu scelerisque felis imperdiet proin fermentum leo. Mauris commodo
-          quis imperdiet massa tincidunt. Cras tincidunt lobortis feugiat
-          vivamus at augue. At augue eget arcu dictum varius duis at consectetur
-          lorem. Velit sed ullamcorper morbi tincidunt. Lorem donec massa sapien
-          faucibus et molestie ac.
-        </Typography> */}
         <Outlet></Outlet>
       </Box>
     </Box>

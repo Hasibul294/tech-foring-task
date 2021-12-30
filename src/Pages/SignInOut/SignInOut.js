@@ -29,7 +29,7 @@ const SignInOut = () => {
         {...other}
       >
         {value === index && (
-          <Box sx={{ p: 0 }}>
+          <Box sx={{ backgroundColor: "#fafafa" }}>
             <Typography>{children}</Typography>
           </Box>
         )}
@@ -49,9 +49,8 @@ const SignInOut = () => {
         >
           <Box
             style={{
-              width: "100%",
-              backgroundColor: "white",
-              border: "1px solid grey",
+              width: "80%",
+              boxShadow: 3,
             }}
           >
             <Tabs value={value} onChange={handleChange} centered>
@@ -59,7 +58,7 @@ const SignInOut = () => {
               <Tab label="SIGN UP" />
             </Tabs>
             <TabPanel value={value} index={0}>
-              <SignIn></SignIn>
+              <SignIn handleChange={handleChange}></SignIn>
             </TabPanel>
             <TabPanel value={value} index={1}>
               <SignUp></SignUp>
