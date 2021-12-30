@@ -7,9 +7,13 @@ import FiberNewIcon from "@mui/icons-material/FiberNew";
 import GroupIcon from "@mui/icons-material/Group";
 import Button from "@mui/material/Button";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
+import CreateModal from "../CreateModal/CreateModal";
 
 const Jobs = () => {
   const [jobs, setJobs] = useState([]);
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
   useEffect(() => {
     const token = localStorage.getItem("user-info");
     const finalToken = JSON.parse(token).access;
@@ -152,6 +156,7 @@ const Jobs = () => {
         <Button
           variant="contained"
           color="success"
+          onClick={handleOpen}
           sx={{
             p: "8px",
             mb: 2,
@@ -160,6 +165,7 @@ const Jobs = () => {
           <AddCircleIcon sx={{ mr: "5px" }}></AddCircleIcon> CREATE JOB
         </Button>
       </Box>
+      <CreateModal open={open} handleClose={handleClose}></CreateModal>
       <JobsTable jobs={jobs}></JobsTable>
     </Box>
   );
