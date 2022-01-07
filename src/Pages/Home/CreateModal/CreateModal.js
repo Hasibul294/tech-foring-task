@@ -76,7 +76,7 @@ const CreateModal = ({ open, handleClose }) => {
   const handleBookSubmit = (e) => {
     e.preventDefault();
 
-    fetch("https://young-caverns-24263.herokuapp.com/appointments", {
+    fetch("https://tf-practical.herokuapp.com/api/job_post/?format=json", {
       method: "POST",
       headers: {
         "content-type": "application/json",
